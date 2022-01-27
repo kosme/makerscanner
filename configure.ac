@@ -3,9 +3,9 @@
 
 AC_PREREQ([2.65])
 AC_INIT([makerscanner], [0.3.2], [abarry@makerscanner.com])
-AM_INIT_AUTOMAKE(makerscanner, 0.3.2)
 AC_CONFIG_SRCDIR([ScanStatus.cpp])
 AC_CONFIG_HEADERS([config.h])
+AM_INIT_AUTOMAKE
 
 # Checks for programs.
 AC_PROG_CXX
@@ -55,7 +55,7 @@ fi
 
 
 
-PKG_CHECK_MODULES([OPENCV], [opencv >= 2.0])
+PKG_CHECK_MODULES([OPENCV], [opencv4 >= 2.0])
 
 
 
