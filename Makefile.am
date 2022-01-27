@@ -1,7 +1,8 @@
 ##Process this file with automake to create Makefile.in
 
 bin_PROGRAMS = makerscanner
-makerscanner_SOURCES = ActiveStereoApp.cpp CaptureThread.h ScanStatus.h ActiveStereoApp.h DistanceToReferenceDialog.cpp ScanThread.cpp ActiveStereoMain.cpp DistanceToReferenceDialog.h ScanThread.h ActiveStereoMain.h IndividualPixels.h Cameras.cpp PointCloud.cpp Cameras.h PointCloud.h camview.cpp PointCloudPoint.cpp camview.h PointCloudPoint.h SetHorz.h CaptureThread.cpp ScanStatus.cpp
+AUTOMAKE_OPTIONS = subdir-objects
+makerscanner_SOURCES = src/ActiveStereoApp.cpp  src/CaptureThread.h  src/ScanStatus.h  src/ActiveStereoApp.h  src/DistanceToReferenceDialog.cpp  src/ScanThread.cpp  src/ActiveStereoMain.cpp  src/DistanceToReferenceDialog.h  src/ScanThread.h  src/ActiveStereoMain.h  src/IndividualPixels.h  src/Cameras.cpp  src/PointCloud.cpp  src/Cameras.h  src/PointCloud.h  src/camview.cpp  src/PointCloudPoint.cpp  src/camview.h  src/PointCloudPoint.h  src/SetHorz.h  src/CaptureThread.cpp  src/ScanStatus.cpp  src/
 
 EXTRA_DIST = laserIcon.png
 pixmapdir = $(datadir)/pixmaps

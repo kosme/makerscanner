@@ -1,9 +1,9 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ([2.65])
+AC_PREREQ([2.69])
 AC_INIT([makerscanner], [0.3.2], [abarry@makerscanner.com])
-AC_CONFIG_SRCDIR([ScanStatus.cpp])
+AC_CONFIG_SRCDIR([src/ScanStatus.cpp])
 AC_CONFIG_HEADERS([config.h])
 AM_INIT_AUTOMAKE
 
@@ -47,7 +47,7 @@ if test $FOUND_GSL != 1; then
 
         If you are on Ubuntu you can probably solve this by running
 
-        sudo apt-get install libgsl0-dev
+        sudo apt-get install libgsl-dev
         ])
 fi
 
