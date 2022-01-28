@@ -199,7 +199,7 @@ ActiveStereoFrame::ActiveStereoFrame(wxWindow* parent,wxWindowID id)
     #elif defined(__UNIX__)
         {
         wxIcon FrameIcon;
-        FrameIcon.CopyFromBitmap(wxBitmap(wxImage(PIXMAPS_DIR _T("/laserIcon.png"))));
+        FrameIcon.CopyFromBitmap(wxBitmap(wxImage("laserIcon.png")));
         SetIcon(FrameIcon);
         }
     #endif

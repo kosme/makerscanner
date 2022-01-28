@@ -4,7 +4,7 @@
 // Purpose:     eye/camera view/GUI system control methods
 //
 // Created by:  Larry Lart on 22-Feb-2006
-// Updated by:  Andrew Barry Jan 2010
+// Updated by:  Enrique Condes Jan 2022
 //
 // Copyright:   (c) 2006 Larry Lart
 ////////////////////////////////////////////////////////////////////
@@ -23,8 +23,6 @@
 // system header
 #include <math.h>
 #include <stdio.h>
-#include "cv.h"
-#include "highgui.h"
 
 
 #ifdef __GNUG__
@@ -154,10 +152,10 @@ void CCamView::DrawCam( IplImage* pImg )
 
 
         // draw a vertical line through the center of the image
-        cvLine(pDstImg, cvPoint(nCamWidth/2, 0), cvPoint(nCamWidth/2, nCamHeight), CV_RGB( 0,255,0 ));
+        cv::line((cv::InputOutputArray) pDstImg, cvPoint(nCamWidth/2, 0), cvPoint(nCamWidth/2, nCamHeight), CV_RGB( 0,255,0 ));
 
         // draw a horizontal line at pixel 25
-        cvLine(pDstImg, cvPoint(0, 25), cvPoint(nCamWidth, 25), CV_RGB( 0,255,0 ));
+        cv::line((cv::InputOutputArray) pDstImg, cvPoint(0, 25), cvPoint(nCamWidth, 25), CV_RGB( 0,255,0 ));
 
         // draw a horizontal line through the center of the image
         //cvLine(pDstImg, cvPoint(0, nCamHeight/2), cvPoint(nCamWidth, nCamHeight/2), CV_RGB( 0,255,0 ));

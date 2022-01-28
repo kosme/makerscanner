@@ -4,7 +4,7 @@
 // Purpose:		interface for the CCamView class.
 //
 // Created by:	Larry Lart on 06-Jul-2006
-// Updated by:	Andrew Barry Jan 2010
+// Updated by:	Enrique Condes Jan 2022
 //
 ////////////////////////////////////////////////////////////////////
 
@@ -13,8 +13,12 @@
 
 #include <wx/wx.h>
 
-#include "cv.h"
-#include "highgui.h"
+//#include "cv.h"
+//#include "highgui.h"
+#include "opencv2/core.hpp"
+#include "opencv2/core/core_c.h"
+#include "opencv2/core/types_c.h"
+#include "opencv2/imgproc.hpp"
 
 class CCamView : public wxWindow
 {

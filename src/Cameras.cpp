@@ -144,7 +144,7 @@ void Cameras::SaveSingleFrame()
 {
 	if (!CaptureExists()) return;
 	m_NumberOfCapturedFrames++;
-	cvSaveImage(GetLastCapturedFrameFilename().char_str(), m_LastFrame);
+	cv::imwrite((cv::String)GetLastCapturedFrameFilename().char_str(), (cv::InputArray) m_LastFrame);
 	//m_pMemo->AppendText(wxChar((char*)GetLastCapturedFrameFilename().c_str()));
 	//cvSaveImage("testImage.bmp", m_LastFrame);
 }

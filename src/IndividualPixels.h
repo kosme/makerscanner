@@ -21,8 +21,10 @@
 
 #ifndef OPENCV_INCLUDES
 #define OPENCV_INCLUDES
-#include "cv.h"
-#include "highgui.h"
+//#include "cv.h"
+//#include "highgui.h"
+#include "opencv2/core.hpp"
+#include "opencv2/core/types_c.h"
 #endif // OPENCV_INCLUDES
 
 /*
@@ -66,6 +68,9 @@ typedef Pixels<float>          BwImageFloat;
 IplImage* img=cvCreateImage(cvSize(640,480),IPL_DEPTH_8U,1);
 BwImage imgA(img);
 imgA[i][j] = 111;
+
+// create a new 320x240 image
+Mat img(Size(320,240),CV_8UC3);
 
 # For a multi-channel byte image:
 

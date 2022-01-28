@@ -150,7 +150,7 @@ void CaptureThread::SendFrame(IplImage *frame)
     } else if (frame->nChannels == 3){
 
         // opencv stores images as BGR instead of RGB so we need to convert
-        cvConvertImage(frame, pDstImg, CV_CVTIMG_SWAP_RB);
+        cv::cvtColor((cv::InputArray) frame, (cv::OutputArray) pDstImg, cv::COLOR_RGB2BGR);
 
     } else {
         // we don't know how to display this image based on its number of channels

@@ -41,8 +41,10 @@
 #include <wx/filename.h>
 
 // include OpenCV headers
-#include "cv.h"
-#include "highgui.h"
+//#include "cv.h"
+//#include "highgui.h"
+#include "opencv2/core.hpp"
+#include "opencv2/core/core_c.h"
 
 #include "Cameras.h"
 #include "ScanThread.h"
