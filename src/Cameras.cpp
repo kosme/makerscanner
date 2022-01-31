@@ -83,27 +83,29 @@ Cameras::~Cameras()
 		cvReleaseImage(&laserCenteredImage);
 	}
 
-	if (m_MyCapture) cvReleaseCapture(&m_MyCapture);
+	// Automatic release on destruction
+	if (m_MyCapture->isOpened()) 
+		m_MyCapture->release();
 
 }
 
 // Attempt to connect to the camera and grab a frame
 bool Cameras::InitializeCamera()
 {
-	//m_MyCapture = cvCreateCameraCapture(CV_CAP_ANY);
-    m_MyCapture = cvCaptureFromCAM(cameraNum);
-	if (!m_MyCapture)
+	m_MyCapture = new cv::VideoCapture(cameraNum);
+	if (!m_MyCapture->isOpened())
 	{
 		m_pMemo->AppendText(wxT("\nFailed to connect to camera."));
 		return false;
 	}
-	cvQueryFrame(m_MyCapture); // this call is necessary to get correct capture properties
 
 	// TODO: These resolution selection calls don't appear to work right now.
 	//cvSetCaptureProperty(m_MyCapture, CV_CAP_PROP_FRAME_WIDTH, 1280);
 	//cvSetCaptureProperty(m_MyCapture, CV_CAP_PROP_FRAME_HEIGHT, 960);
-	m_FrameHeight   = (int) cvGetCaptureProperty(m_MyCapture, CV_CAP_PROP_FRAME_HEIGHT);
-	m_FrameWidth    = (int) cvGetCaptureProperty(m_MyCapture, CV_CAP_PROP_FRAME_WIDTH);
+
+	m_FrameHeight   = m_MyCapture->get(cv::CAP_PROP_FRAME_HEIGHT);
+	m_FrameWidth    = m_MyCapture->get(cv::CAP_PROP_FRAME_WIDTH);
+	m_FrameRate = m_MyCapture->get(cv::CAP_PROP_FPS);
 	//m_FrameRate     = (int) cvGetCaptureProperty(m_MyCapture, CV_CAP_PROP_FPS);
 	wxString TempString = wxT("\nCamera online at ");
 	TempString << m_FrameWidth << wxT("x") <<	m_FrameHeight << wxT(".");

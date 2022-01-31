@@ -21,7 +21,7 @@
 
 DEFINE_EVENT_TYPE(IMAGE_UPDATE_EVENT)
 
-CaptureThread::CaptureThread(wxFrame *windowIn, CvCapture *captureIn) : wxThread(wxTHREAD_JOINABLE)
+CaptureThread::CaptureThread(wxFrame *windowIn, cv::VideoCapture *captureIn) : wxThread(wxTHREAD_JOINABLE)
 {
     capturing = IDLE;
     window = windowIn;

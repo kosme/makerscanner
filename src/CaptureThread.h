@@ -21,12 +21,11 @@
 
 #include <wx/wx.h>
 
-//#include "cv.h"
-//#include "highgui.h"
 #include "opencv2/core.hpp"
+#include "opencv2/highgui.hpp"
 #include "opencv2/core/core_c.h"
-#include "opencv2/videoio/videoio_c.h"
 #include "opencv2/imgproc.hpp"
+#include "opencv2/videoio.hpp"
 
 #include <queue>
 
@@ -55,7 +54,7 @@ class CaptureThread : public wxThread
 {
 	public:
 		// Constructor
-		CaptureThread(wxFrame *windowIn, CvCapture *captureIn);
+		CaptureThread(wxFrame *windowIn, cv::VideoCapture *captureIn);
 
 		// Function that is run on thread init
 		virtual void* Entry();
@@ -77,7 +76,7 @@ class CaptureThread : public wxThread
 		CaptureStatus capturing;
 
 		wxFrame *window;
-		CvCapture *cvCapture;
+		cv::VideoCapture *cvCapture;
 
 		void CaptureFrame();
 

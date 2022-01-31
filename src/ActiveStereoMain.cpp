@@ -233,10 +233,10 @@ ActiveStereoFrame::ActiveStereoFrame(wxWindow* parent,wxWindowID id)
         // check for the -1 (first camera detected) case
         if (cameraNum == -1)
         {
-            cameraNum = CV_CAP_ANY;
+            cameraNum = cv::CAP_ANY;
         }
     } else {
-        cameraNum = CV_CAP_ANY;
+        cameraNum = cv::CAP_ANY;
     }
 
     //Start up the camera and look at the image

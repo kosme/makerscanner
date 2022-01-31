@@ -23,12 +23,11 @@
 
 #ifndef OPENCV_INCLUDES
 #define OPENCV_INCLUDES
-//#include "cv.h"
-//#include "highgui.h"
 #include "opencv2/core.hpp"
-#include "opencv2/videoio/videoio_c.h"
+#include "opencv2/highgui.hpp"
 #include "opencv2/core/core_c.h"
 #include "opencv2/imgcodecs/imgcodecs.hpp"
+#include "opencv2/videoio.hpp"
 #endif // OPENCV_INCLUDES
 
 
@@ -81,7 +80,7 @@ class Cameras
 		wxTextCtrl *m_pMemo;
 
 		// OpenCV camera capture object
-		CvCapture * m_MyCapture;
+		cv::VideoCapture *m_MyCapture;
 
 		// contains the last frame captured
 		IplImage *m_LastFrame;
