@@ -16,8 +16,6 @@
 //#include "cv.h"
 //#include "highgui.h"
 #include "opencv2/core.hpp"
-#include "opencv2/core/core_c.h"
-#include "opencv2/core/types_c.h"
 #include "opencv2/imgproc.hpp"
 
 class CCamView : public wxWindow
@@ -36,7 +34,7 @@ public:
 	void CheckUpdate( );
 
 	// Draw method
-	void DrawCam( IplImage* pImg );
+	void DrawCam( cv::Mat* pImg );
 	void Draw( wxDC& dc );
 
 // Public data

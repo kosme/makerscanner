@@ -94,9 +94,9 @@ DistanceToReferenceDialog::~DistanceToReferenceDialog()
 void DistanceToReferenceDialog::OnButLaserCenteredClick(wxCommandEvent& event)
 {
 	captureThread->Flush();
-	IplImage *laserCenteredTemp = captureThread->Pop();
+	cv::Mat *laserCenteredTemp = captureThread->Pop();
 
-	laserCentered = cvCloneImage(laserCenteredTemp);
+	laserCentered = new cv::Mat(laserCenteredTemp->clone());
 
 	EndModal(USER_CENTERED_LASER);
 }
@@ -112,9 +112,9 @@ bool DistanceToReferenceDialog::TransferDataFromWindow()
 void DistanceToReferenceDialog::OnButLaserCoveredClick(wxCommandEvent& event)
 {
 	captureThread->Flush();
-	IplImage *tempNoLaserImage = captureThread->Pop();
+	cv::Mat *tempNoLaserImage = captureThread->Pop();
 
-	noLaserImage = cvCloneImage(tempNoLaserImage);
+	noLaserImage = new cv::Mat(tempNoLaserImage->clone());
 
 
 	butLaserCovered->Enable(false);

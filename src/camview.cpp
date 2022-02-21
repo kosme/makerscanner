@@ -136,7 +136,7 @@ void CCamView::Draw( wxDC& dc )
 // Input:   nothing
 // Output:  nothing
 ////////////////////////////////////////////////////////////////////
-void CCamView::DrawCam( IplImage* pImg )
+void CCamView::DrawCam( cv::Mat* pImg )
 {
 //  return;
     if( m_bDrawing ) return;
@@ -145,34 +145,23 @@ void CCamView::DrawCam( IplImage* pImg )
     if( pImg )
     {
         // copy the image (will be deleted after display)
-        IplImage *pDstImg = pImg;//cvCloneImage(pImg);
+        cv::Mat *pDstImg = new cv::Mat(pImg->clone());
 
-        int nCamWidth = pImg->width;//m_pCamera->m_nWidth;
-        int nCamHeight = pImg->height;//m_pCamera->m_nHeight;
-
+        int nCamWidth = pImg->cols;
+        int nCamHeight = pImg->rows;
 
         // draw a vertical line through the center of the image
-        cv::line((cv::InputOutputArray) pDstImg, cvPoint(nCamWidth/2, 0), cvPoint(nCamWidth/2, nCamHeight), CV_RGB( 0,255,0 ));
+        cv::line(*pDstImg, cv::Point(nCamWidth/2, 0), cv::Point(nCamWidth/2, nCamHeight), CV_RGB( 0,255,0 ));
 
         // draw a horizontal line at pixel 25
-        cv::line((cv::InputOutputArray) pDstImg, cvPoint(0, 25), cvPoint(nCamWidth, 25), CV_RGB( 0,255,0 ));
+        cv::line(*pDstImg, cv::Point(0, 25), cv::Point(nCamWidth, 25), CV_RGB( 0,255,0 ));
 
         // draw a horizontal line through the center of the image
-        //cvLine(pDstImg, cvPoint(0, nCamHeight/2), cvPoint(nCamWidth, nCamHeight/2), CV_RGB( 0,255,0 ));
+        //cv::line(*pDstImg, cv::Point(0, nCamHeight/2), cv::Point(nCamWidth, nCamHeight/2), CV_RGB( 0,255,0 ));
 
         // process image from opencv to wxwidgets
-        unsigned char *rawData;
-        // draw my stuff to output canvas
-        CvSize roiSize;
-        int step = 0;
-
-        // get raw data from ipl image
-        cvGetRawData( pDstImg, &rawData, &step, &roiSize );
-
-        // convert data from raw image to wxImg
-
-
-        wxImage *pWxImg = new wxImage( nCamWidth, nCamHeight, rawData, TRUE );
+        
+        wxImage *pWxImg = new wxImage(nCamWidth, nCamHeight, pDstImg->data, TRUE);
 
         // convert to bitmap to be used by the window to draw
 

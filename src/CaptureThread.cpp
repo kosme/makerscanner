@@ -82,21 +82,22 @@ void CaptureThread::CaptureFrame()
         imageQueue.pop();
     }
 
-    for (int i=0; i < 1; i++) cvGrabFrame(cvCapture); // it takes a few images to get to the newest one
-    IplImage* lastFrame = cvRetrieveFrame(cvCapture);
-    // cvShowImage("My Camera", LastFrame);
-    imageQueue.push(lastFrame);
+    for (int i=0; i < 1; i++) {
+        cvCapture->read(src); // it takes a few images to get to the newest one???
+    }
+    //cv::imshow("My Camera", src); cv::waitKey(25);
+    imageQueue.push(&src);
 
 }
 
-IplImage* CaptureThread::Pop()
+cv::Mat* CaptureThread::Pop()
 {
     if (imageQueue.size() <= 0)
     {
         CaptureFrame();
     }
 
-    IplImage *image = imageQueue.front();
+    cv::Mat *image = imageQueue.front();
 
     if (imageQueue.size() > 1)
     {
@@ -129,34 +130,34 @@ void CaptureThread::Flush()
 
 // Display the given image on the frame
 // Copies the image so it is safe to change it after the function call
-void CaptureThread::SendFrame(IplImage *frame)
+void CaptureThread::SendFrame(cv::Mat *frame)
 {
     if (!frame)
     {
         return;
     }
 
-    IplImage* pDstImg;
-    CvSize sz = cvSize(frame->width, frame->height);
-    pDstImg = cvCreateImage(sz, 8, 3);
-    cvZero(pDstImg);
-    // convert the image into a 3 channel image for display on the frame
-    if (frame->nChannels == 1)
-    {
-        //cvCvtColor(frame, pDstImg, CV_GRAY2BGR);
+    cv::Mat* pDstImg;
+    cv::Size sz = cv::Size(frame->cols, frame->rows);
+    pDstImg = new cv::Mat(sz, CV_8UC3, cv::Scalar::all(0));
 
-        // another way to convert grayscale to RGB
-        cvMerge(frame, frame, frame, NULL, pDstImg);
-    } else if (frame->nChannels == 3){
+    // convert the image into a 3 channel image for display on the frame
+    if (frame->type() == CV_8UC1)
+    {
+        // Convert grayscale to RGB
+        // cvCvtColor(frame, pDstImg, CV_GRAY2BGR);
+
+        cv::cvtColor(*frame, *pDstImg, cv::COLOR_GRAY2BGR);
+    } else if (frame->type() == CV_8UC3){
 
         // opencv stores images as BGR instead of RGB so we need to convert
-        cv::cvtColor((cv::InputArray) frame, (cv::OutputArray) pDstImg, cv::COLOR_RGB2BGR);
+        cv::cvtColor(*frame, *pDstImg, cv::COLOR_RGB2BGR);
 
     } else {
         // we don't know how to display this image based on its number of channels
 
         // give up
-        cvReleaseImage( &pDstImg );
+        pDstImg->~Mat();
         return;
     }
 

@@ -356,7 +356,7 @@ void ActiveStereoFrame::UpdateImage(wxCommandEvent &event)
 
     // image is shipped as a pointer in the event
     // cast to IplImage (must release once finished)
-    IplImage *img = (IplImage*)event.GetClientData();
+    cv::Mat *img = (cv::Mat*)event.GetClientData();
 
     if (updateImageRunning == true)
     {
@@ -384,7 +384,7 @@ void ActiveStereoFrame::UpdateImage(wxCommandEvent &event)
     m_pCamView->DrawCam(img);
 
     // delete the image that was copied for us to display
-    cvReleaseImage(&img);
+    img->~Mat();
 
     updateImageRunning = false;
 

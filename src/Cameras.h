@@ -25,7 +25,6 @@
 #define OPENCV_INCLUDES
 #include "opencv2/core.hpp"
 #include "opencv2/highgui.hpp"
-#include "opencv2/core/core_c.h"
 #include "opencv2/imgcodecs/imgcodecs.hpp"
 #include "opencv2/videoio.hpp"
 #endif // OPENCV_INCLUDES
@@ -51,9 +50,9 @@ class Cameras
 		bool InitializeCamera();
 
 		// Get a frame
-		IplImage* FrameGrab();
+		cv::Mat* FrameGrab();
 
-		IplImage* GetLastFrame() { return m_LastFrame; }
+		cv::Mat* GetLastFrame() { return m_LastFrame; }
 		void SaveSingleFrame();
 		wxString GetLastCapturedFrameFilename();
 
@@ -83,13 +82,13 @@ class Cameras
 		cv::VideoCapture *m_MyCapture;
 
 		// contains the last frame captured
-		IplImage *m_LastFrame;
+		cv::Mat *m_LastFrame;
 
 		// contains the object we are scanning without the laser
-		IplImage *noLaserImage;
+		cv::Mat *noLaserImage;
 
 		// contains the laser centered image
-		IplImage *laserCenteredImage;
+		cv::Mat *laserCenteredImage;
 
 		// ScanThread that does most of the work
 		ScanThread *myScanThread;
@@ -106,6 +105,8 @@ class Cameras
 		int m_NumberOfCapturedFrames, m_FrameHeight, m_FrameWidth, m_FrameRate, thresholdPixelValue, cameraNum;
 		bool m_CamPaused, m_CamPlaying, m_Camped;
 		bool CaptureExists();
+
+		cv::Mat src;
 
 };
 

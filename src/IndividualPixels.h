@@ -21,10 +21,8 @@
 
 #ifndef OPENCV_INCLUDES
 #define OPENCV_INCLUDES
-//#include "cv.h"
-//#include "highgui.h"
 #include "opencv2/core.hpp"
-#include "opencv2/core/types_c.h"
+#include "opencv2/highgui.hpp"
 #endif // OPENCV_INCLUDES
 
 /*
@@ -35,13 +33,14 @@
 template<class T> class Pixels
 {
   private:
-  IplImage* imgp;
+  cv::Mat* imgp;
   public:
-  Pixels(IplImage* img=0) {imgp=img;}
+  Pixels(cv::Mat* img=0) {imgp=img;}
   ~Pixels(){imgp=0;}
-  void operator=(IplImage* img) {imgp=img;}
+  void operator=(cv::Mat* img) {imgp=img;}
   inline T* operator[](const int rowIndx) {
-    return ((T *)(imgp->imageData + rowIndx*imgp->widthStep));}
+    return (T *)(imgp->data + rowIndx*imgp->step);
+    }
 };
 
 typedef struct{

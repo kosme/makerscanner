@@ -75,12 +75,12 @@ Cameras::~Cameras()
 
 	if (noLaserImage)
 	{
-		cvReleaseImage(&noLaserImage);
+		noLaserImage->~Mat();
 	}
 
 	if (laserCenteredImage)
 	{
-		cvReleaseImage(&laserCenteredImage);
+		laserCenteredImage->~Mat();
 	}
 
 	// Automatic release on destruction
@@ -130,12 +130,15 @@ bool Cameras::CaptureExists()
 // Grab a frame (note that this is NOT the same as the FrameGrab in ScanThread.cpp)
 
 // TODO: remove this
-IplImage *Cameras::FrameGrab()
+cv::Mat *Cameras::FrameGrab()
 {
-	if (!CaptureExists()) return NULL;
-   for (int i=0; i < 8; i++) cvGrabFrame(m_MyCapture); // it takes a few images to get to the newest one
-   m_LastFrame = cvRetrieveFrame(m_MyCapture);
-   //cvShowImage("My Camera", m_LastFrame);
+	if (!CaptureExists()) 
+		return NULL;
+	for (int i=0; i < 8; i++) {
+		m_MyCapture->read(src); // it takes a few images to get to the newest one????
+	}
+	m_LastFrame = &src;
+	//cv::imshow("Camera", *m_LastFrame);
 	return m_LastFrame;
 
 }
@@ -146,7 +149,7 @@ void Cameras::SaveSingleFrame()
 {
 	if (!CaptureExists()) return;
 	m_NumberOfCapturedFrames++;
-	cv::imwrite((cv::String)GetLastCapturedFrameFilename().char_str(), (cv::InputArray) m_LastFrame);
+	cv::imwrite((cv::String)GetLastCapturedFrameFilename().char_str(), *m_LastFrame);
 	//m_pMemo->AppendText(wxChar((char*)GetLastCapturedFrameFilename().c_str()));
 	//cvSaveImage("testImage.bmp", m_LastFrame);
 }

@@ -23,7 +23,6 @@
 
 #include "opencv2/core.hpp"
 #include "opencv2/highgui.hpp"
-#include "opencv2/core/core_c.h"
 #include "opencv2/imgproc.hpp"
 #include "opencv2/videoio.hpp"
 
@@ -62,12 +61,12 @@ class CaptureThread : public wxThread
 		// Safely close
 		virtual void OnExit();
 
-		IplImage* Pop();
+		cv::Mat* Pop();
 
 		void SetCapture(CaptureStatus newStatus) { capturing = newStatus; }
 
 		int GetQueueSize() { return imageQueue.size(); }
-		void SendFrame(IplImage *frame);
+		void SendFrame(cv::Mat *frame);
 
 		void Flush();
 
@@ -80,7 +79,9 @@ class CaptureThread : public wxThread
 
 		void CaptureFrame();
 
-		queue<IplImage*> imageQueue;
+		queue<cv::Mat*> imageQueue;
+
+		cv::Mat src;
 
 
 
