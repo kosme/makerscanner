@@ -197,7 +197,7 @@ void* ScanThread::Entry()
 
     // write the pointcloud file
     WritePointCloudFile();
-    DisplayText(wxT("\nPoint cloud generation complete."));
+    DisplayText("\nPoint cloud generation complete.");
 
     captureThread->SetCapture(PREVIEW);
 
@@ -401,11 +401,11 @@ void ScanThread::AddPointcloudPoints(vector<float> *laserPos)
 
 //          if (h == 100)
 //          {
-//              wxString tmp = wxT("\ndiff: ");
+//              wxString tmp = "\ndiff: ";
 //              tmp << widthReference - laserCenter;
-//              tmp += wxT(" widthR: ");
+//              tmp += " widthR: ";
 //              tmp << widthReference;
-//              tmp += wxT(" laserCenter: ");
+//              tmp += " laserCenter: ";
 //              tmp << laserCenter;
 //              DisplayText(tmp);
 //          }
@@ -455,7 +455,7 @@ double ScanThread::PixelToDistance2(float laserCenter, float widthReference)
 
     if (ret > 100)
     {
-        DisplayText(wxT("\nWarning: large distance detected."));
+        DisplayText("\nWarning: large distance detected.");
     }
 
     return ret;
@@ -511,7 +511,7 @@ float ScanThread::GetReferenceLaserLocation(vector<float> *laserCenterPx)
         // we probably don't have a good idea where the laser is
         if (DEBUG_ON == 1)
         {
-            DisplayText(wxT("\nWanring: failed to find reference laser."));
+            DisplayText("\nWanring: failed to find reference laser.");
         }
 
         return -1;
@@ -531,7 +531,7 @@ float ScanThread::GetDistanceToReferenceWall(vector<float> *laserCenterPx)
     if (refCenter < 0)
     {
         // failed to find reference laser.
-        DisplayText(wxT("\nError: failed to compute distance to target.  Most likely didn't get a clear enough picture of the laser line.  Aborting."));
+        DisplayText("\nError: failed to compute distance to target.  Most likely didn't get a clear enough picture of the laser line.  Aborting.");
         return -1;
     }
 
@@ -546,10 +546,10 @@ float ScanThread::GetDistanceToReferenceWall(vector<float> *laserCenterPx)
 
     distanceFromFlatReference +=  float(PIXELS_PER_CM_PER_CM) / pixelsPerCmOnFlatReference;
 
-    wxString strDist = wxT("\nEstimated distance from flat reference = ");
+    wxString strDist = "\nEstimated distance from flat reference = ";
     wxString numstr;
-    numstr.Printf(wxT("%.0f"), distanceFromFlatReference);
-    strDist += numstr + wxT("cm");
+    numstr.Printf("%.0f", distanceFromFlatReference);
+    strDist += numstr + "cm";
 
     DisplayText(strDist);
 

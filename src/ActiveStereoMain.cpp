@@ -193,7 +193,7 @@ ActiveStereoFrame::ActiveStereoFrame(wxWindow* parent,wxWindowID id)
     // frame icon
     #if defined(__WXMSW__)
         {
-            wxIcon FrameIcon(wxT("laserIcon.ico"), wxBITMAP_TYPE_ICO);
+            wxIcon FrameIcon("laserIcon.ico", wxBITMAP_TYPE_ICO);
             SetIcon(FrameIcon);
         }
     #elif defined(__UNIX__)
@@ -223,10 +223,10 @@ ActiveStereoFrame::ActiveStereoFrame(wxWindow* parent,wxWindowID id)
     scanStatus = new ScanStatus();
 
     // read the camera preference out of the config
-    wxConfig *config = new wxConfig(wxT("makerscanner"));
+    wxConfig *config = new wxConfig("makerscanner");
     config->Set(config);
 
-    if (config->Read(wxT("CameraNum"), &cameraNum))
+    if (config->Read("CameraNum", &cameraNum))
     {
         // read the value successfully
 
@@ -282,30 +282,29 @@ void ActiveStereoFrame::OnQuit(wxCommandEvent& event)
 // On about, show a dialog with name, email, etc.
 void ActiveStereoFrame::OnAbout(wxCommandEvent& event)
 {
-    wxString msg = wxT("MakerScanner v0.3.2\nhttp://makerscanner.com\n\n(C) 2009-2010\nAndrew Barry\nabarry@gmail.com");
+    wxString msg = "MakerScanner v0.3.2\nhttp://makerscanner.com\n\n(C) 2009-2010\nAndrew Barry\nabarry@gmail.com";
     wxMessageBox(msg, _("MakerScanner"));
 }
 
 // Scan button clicked -- start a new scan!
 void ActiveStereoFrame::OnButCaptureClick(wxCommandEvent& event)
 {
-    wxString directory = wxT("");
+    wxString directory = "";
 
     // read the last directory used
-    wxConfig *config = (wxConfig*)wxConfigBase::Get();
-    if (config->Read(wxT("ScanDir"), &directory))
+    if (config->Read("ScanDir", &directory))
     {
         // check for a not valid directory
         if (wxDir::Exists(directory) == false)
         {
-            directory = wxT("");
+            directory = "";
         }
     } else {
         // failed to read config
-        directory = wxT("");
+        directory = "";
     }
     // ask where to save the point cloud file
-    wxFileDialog dialog(this, wxT("Save pointcloud file"), directory, wxT("pointcloud.ply"), wxT("*.ply"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+    wxFileDialog dialog(this, "Save pointcloud file", directory, "pointcloud.ply", "*.ply", wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
     if (dialog.ShowModal() != wxID_OK)
     {
         // user clicked cancel
@@ -319,19 +318,19 @@ void ActiveStereoFrame::OnButCaptureClick(wxCommandEvent& event)
     if (dir.IsOk() == true)
     {
         // save the new selected directory
-        config->Write(wxT("ScanDir"), dir.GetPath());
+        config->Write("ScanDir", dir.GetPath());
 
     }
 
     // clear the point cloud file
-    wxFFile file(pointcloudFilename, wxT("w"));
+    wxFFile file(pointcloudFilename, "w");
     if (file.IsOpened())
     {
-        txtLog->AppendText(wxT("\nWriting point cloud file:\n\t"));
+        txtLog->AppendText("\nWriting point cloud file:\n\t");
         txtLog->AppendText(pointcloudFilename);
         file.Close();
     } else {
-        txtLog->AppendText(wxT("\nPoint cloud file did not open!"));
+        txtLog->AppendText("\nPoint cloud file did not open!");
         return;
     }
 
@@ -361,8 +360,7 @@ void ActiveStereoFrame::UpdateImage(wxCommandEvent &event)
 
     if (updateImageRunning == true)
     {
-        txtLog->AppendText(wxT("\nUpdate image was already running"));
-        cvReleaseImage(&img);
+        txtLog->AppendText("\nUpdate image was already running");
         return;
     }
     updateImageRunning = true;
@@ -371,7 +369,7 @@ void ActiveStereoFrame::UpdateImage(wxCommandEvent &event)
     if (cameraConnected != true)
     {
         cameraConnected = true;
-        lblCameraConnected->SetLabel(wxT("Connected"));
+        lblCameraConnected->SetLabel("Connected");
 
         // reset layouts now that the length of the label in lblCameraConnected has changed
         flexGridStatus->Layout();
@@ -407,15 +405,15 @@ void ActiveStereoFrame::DisplayText(wxCommandEvent &event)
 // write to the point cloud file
 void ActiveStereoFrame::WriteToFile(wxCommandEvent &event)
 {
-    wxString FilesWritten = wxT("");
+    wxString FilesWritten = "";
     //static int i = 0;  // monitor how many times we do file writes
-    //if (i==0) txtLog->AppendText(wxT("\nWriting topoint cloud file: "));
+    //if (i==0) txtLog->AppendText("\nWriting topoint cloud file: ");
     //i++;
-   //FilesWritten << i << wxT(" ");
-    wxFFile file(pointcloudFilename, wxT("a"));
+   //FilesWritten << i << " ";
+    wxFFile file(pointcloudFilename, "a");
     file.Write(event.GetString());
     if (file.IsOpened())  txtLog->AppendText(FilesWritten);
-    else txtLog->AppendText(wxT("Point cloud file did not open!"));
+    else txtLog->AppendText("Point cloud file did not open!");
     file.Close();
 }
 
@@ -436,12 +434,12 @@ void ActiveStereoFrame::SetGUIStateDuringScan(bool scanning)
     if (scanning == true)
     {
         enable = false;
-        butCapture->SetLabel(wxT("Scanning..."));
+        butCapture->SetLabel("Scanning...");
 
     } else {
         enable = true;
-        butCapture->SetLabel(wxT("Start Scan"));
-        butDoneScanning->SetLabel(wxT("Done Scanning"));
+        butCapture->SetLabel("Start Scan");
+        butDoneScanning->SetLabel("Done Scanning");
     }
 
     butCapture->Enable(enable);
@@ -477,7 +475,7 @@ void ActiveStereoFrame::OnButDoneScanningClick(wxCommandEvent& event)
     // this will let the scanning thread finish it's current tasks
     // once done, the thread will send a scan finished event.
     scanStatus->SetScanning(false);
-    butDoneScanning->SetLabel(wxT("Finishing Scan..."));
+    butDoneScanning->SetLabel("Finishing Scan...");
     butDoneScanning->Enable(false);
 }
 
@@ -485,7 +483,7 @@ void ActiveStereoFrame::OnButDoneScanningClick(wxCommandEvent& event)
 void ActiveStereoFrame::OnSliderImageThresholdCmdScroll(wxScrollEvent& event)
 {
     // update the label
-    wxString str = wxT("Brightness Threshold: ");
+    wxString str = "Brightness Threshold: ";
     str << sliderImageThreshold->GetValue();
     lblImageThreshold->SetLabel(str);
 }
@@ -493,16 +491,16 @@ void ActiveStereoFrame::OnSliderImageThresholdCmdScroll(wxScrollEvent& event)
 void ActiveStereoFrame::OnSliderBrightnessFilterCmdScrollThumbTrack(wxScrollEvent& event)
 {
     // update the label
-    wxString str = wxT("Brightness Filter: ");
+    wxString str = "Brightness Filter: ";
     wxString numstr;
-    numstr.Printf(wxT("%.2f"), float(sliderBrightnessFilter->GetValue()) / 100.0);
+    numstr.Printf("%.2f", float(sliderBrightnessFilter->GetValue()) / 100.0);
     lblBrightnessFilter->SetLabel(str + numstr);
 }
 
 void ActiveStereoFrame::OnMenuChangeCameraSelected(wxCommandEvent& event)
 {
     // open the camera number dialog
-    wxNumberEntryDialog dialog (this, wxT("Cameras are numbered in the order they are connected in.\n\nSet the value to -1 to select the first valid camera detected."), wxT("New camera number:"), wxT("MakerScanner - Change Camera"), cameraNum, -1, 10);
+    wxNumberEntryDialog dialog (this, "Cameras are numbered in the order they are connected in.\n\nSet the value to -1 to select the first valid camera detected.", "New camera number:", "MakerScanner - Change Camera", cameraNum, -1, 10);
 
     long cameraNumNew;
 
@@ -512,10 +510,10 @@ void ActiveStereoFrame::OnMenuChangeCameraSelected(wxCommandEvent& event)
 
         wxConfig *config = (wxConfig*)wxConfigBase::Get();
 
-        config->Write(wxT("CameraNum"), cameraNumNew);
+        config->Write("CameraNum", cameraNumNew);
 
-        wxMessageBox(wxT("You must restart MakerScanner for your changes to take effect."),
-            wxT("MakerScanner - Settings Changed"));
+        wxMessageBox("You must restart MakerScanner for your changes to take effect.",
+            "MakerScanner - Settings Changed");
     }
 }
 
@@ -536,7 +534,7 @@ void ActiveStereoFrame::UpdateFps(wxUpdateUIEvent &event)
 
         timeOfLastFpsUpdate = now;
 
-        wxString fpsString = wxString::Format(wxT("%4.1f"), fps);
+        wxString fpsString = wxString::Format("%4.1f", fps);
 
         lblFPS->SetLabel(fpsString);
 
@@ -544,7 +542,7 @@ void ActiveStereoFrame::UpdateFps(wxUpdateUIEvent &event)
         if (fps < 0.5)
         {
             cameraConnected = false;
-            lblCameraConnected->SetLabel(wxT("Disconnected"));
+            lblCameraConnected->SetLabel("Disconnected");
 
             // reset layouts now that the length of the label in lblCameraConnected has changed
             flexGridStatus->Layout();

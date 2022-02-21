@@ -46,10 +46,10 @@ Cameras::Cameras(wxTextCtrl *pMemo, wxFrame *windowIn, ScanStatus *scanStatusIn,
 
 	// filename format for the first frame from camera 0 is MyFrame0.bmp
 	// the 12th frame is MyFrame12.bmp
-	m_filename =  wxT("MyFrame");   // This is the base name, integers will be appended for each frame captured
-	m_fileformat = wxT(".bmp");	// can choose bmp, jpg, etc for saving images
-	m_LastCapturedFrameFilename = wxT("");
-	m_FilenameIndex = wxT("");
+	m_filename =  "MyFrame";   // This is the base name, integers will be appended for each frame captured
+	m_fileformat = ".bmp";	// can choose bmp, jpg, etc for saving images
+	m_LastCapturedFrameFilename = "";
+	m_FilenameIndex = "";
 	m_NumberOfCapturedFrames = 0;
 
 	//cvNamedWindow("My Camera", CV_WINDOW_AUTOSIZE);
@@ -60,7 +60,7 @@ Cameras::Cameras(wxTextCtrl *pMemo, wxFrame *windowIn, ScanStatus *scanStatusIn,
 		captureThread = new CaptureThread(window, m_MyCapture);
 		if ( captureThread->Create() != wxTHREAD_NO_ERROR )
 		{
-			m_pMemo->AppendText(wxT("\nFailed to create capture thread."));
+			m_pMemo->AppendText("\nFailed to create capture thread.");
 		} else {
 			captureThread->Run();
 			captureThread->SetCapture(PREVIEW);
@@ -95,7 +95,7 @@ bool Cameras::InitializeCamera()
 	m_MyCapture = new cv::VideoCapture(cameraNum);
 	if (!m_MyCapture->isOpened())
 	{
-		m_pMemo->AppendText(wxT("\nFailed to connect to camera."));
+		m_pMemo->AppendText("\nFailed to connect to camera.");
 		return false;
 	}
 
@@ -107,8 +107,8 @@ bool Cameras::InitializeCamera()
 	m_FrameWidth    = m_MyCapture->get(cv::CAP_PROP_FRAME_WIDTH);
 	m_FrameRate = m_MyCapture->get(cv::CAP_PROP_FPS);
 	//m_FrameRate     = (int) cvGetCaptureProperty(m_MyCapture, CV_CAP_PROP_FPS);
-	wxString TempString = wxT("\nCamera online at ");
-	TempString << m_FrameWidth << wxT("x") <<	m_FrameHeight << wxT(".");
+	wxString TempString = "\nCamera online at ";
+	TempString << m_FrameWidth << "x" <<	m_FrameHeight << ".";
 	m_pMemo->AppendText(TempString);
 
 	FrameGrab();
@@ -121,7 +121,7 @@ bool Cameras::CaptureExists()
 {
 	if (!m_MyCapture)
 	{
-		m_pMemo->AppendText(wxT("\nCamera not initialized."));
+		m_pMemo->AppendText("\nCamera not initialized.");
 		return false;
 	}
 	return true;
@@ -170,7 +170,7 @@ void Cameras::StartScan()
 		myScanThread = new ScanThread(window, captureThread, scanStatus, noLaserImage, laserCenteredImage, distanceToReferenceWall);
 		if ( myScanThread->Create() != wxTHREAD_NO_ERROR )
 		{
-			m_pMemo->AppendText(wxT("\nFailed to create scan thread."));
+			m_pMemo->AppendText("\nFailed to create scan thread.");
 		} else {
 			scanStatus->SetScanning(true);
 			myScanThread->SetThresholdPixelValue(thresholdPixelValue);

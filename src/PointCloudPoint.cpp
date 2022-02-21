@@ -46,25 +46,25 @@ wxString PointCloudPoint::GetPlyString()
 	y = pxDist;
 	z = pxDist * tan(phi);
 
-	wxString xString = wxT("");
+	wxString xString = "";
 	xString << x;
 
-	wxString yString = wxT("");
+	wxString yString = "";
 	yString << y;
 
-	wxString zString = wxT("");
+	wxString zString = "";
 	zString << z;
 
-	wxString rString = wxT("");
+	wxString rString = "";
 	rString << r;
 
-	wxString gString = wxT("");
+	wxString gString = "";
 	gString << g;
 
-	wxString bString = wxT("");
+	wxString bString = "";
 	bString << b;
 
-	return xString + wxT(" ") + yString + wxT(" ") + zString + wxT(" ") + rString + wxT(" ")
-		+ gString + wxT(" ") + bString;
+	return xString + " " + yString + " " + zString + " " + rString + " "
+		+ gString + " " + bString;
 
 }

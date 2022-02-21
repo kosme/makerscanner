@@ -92,23 +92,23 @@ void PointCloud::AddPoint(PointCloudPoint *point)
 // Return a .ply file containing the entire point cloud (large string!)
 wxString PointCloud::GetPointCloudPly()
 {
-	wxString cloudString = wxT("");
+	wxString cloudString = "";
 
-	wxString headerString = wxT("ply");
-	headerString += wxT("\nformat ascii 1.0");
+	wxString headerString = "ply";
+	headerString += "\nformat ascii 1.0";
 
-	headerString += wxT("\nelement vertex ");
+	headerString += "\nelement vertex ";
 	headerString << numberOfPoints;
 
-	headerString += wxT("\nproperty float x");
-	headerString += wxT("\nproperty float y");
-	headerString += wxT("\nproperty float z");
-	headerString += wxT("\nproperty uchar diffuse_red");
-	headerString += wxT("\nproperty uchar diffuse_green");
-	headerString += wxT("\nproperty uchar diffuse_blue");
-	headerString += wxT("\nelement face 0");
-	headerString += wxT("\nproperty list uchar int vertex_indices");
-	headerString += wxT("\nend_header");
+	headerString += "\nproperty float x";
+	headerString += "\nproperty float y";
+	headerString += "\nproperty float z";
+	headerString += "\nproperty uchar diffuse_red";
+	headerString += "\nproperty uchar diffuse_green";
+	headerString += "\nproperty uchar diffuse_blue";
+	headerString += "\nelement face 0";
+	headerString += "\nproperty list uchar int vertex_indices";
+	headerString += "\nend_header";
 
 	CloudMap::iterator it;
 	ListOfCloudPoints *thisList;
@@ -119,7 +119,7 @@ wxString PointCloud::GetPointCloudPly()
 
 		PointCloudPoint thisPoint = AverageList(thisList);
 
-		cloudString += wxT("\n") + thisPoint.GetPlyString();
+		cloudString += "\n" + thisPoint.GetPlyString();
 
 	}
 
