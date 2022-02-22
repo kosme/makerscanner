@@ -122,8 +122,8 @@ ActiveStereoFrame::ActiveStereoFrame(wxWindow* parent,wxWindowID id)
     lblFPS = new wxStaticText(Panel1, ID_FPS_LABEL, _("0.0"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_FPS_LABEL"));
     flexGridStatus->Add(lblFPS, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
     staticBoxSizerStatus->Add(flexGridStatus, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-    butCameraConnect = new wxButton(Panel1, ID_BUTTON4, _("Camera Connect"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON4"));
-    staticBoxSizerStatus->Add(butCameraConnect, 1, wxALL|wxALIGN_TOP|wxALIGN_CENTER_HORIZONTAL, 5);
+    btnCameraConnect = new wxButton(Panel1, ID_BUTTON4, _("Camera Connect"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON4"));
+    staticBoxSizerStatus->Add(btnCameraConnect, 1, wxALL|wxALIGN_TOP|wxALIGN_CENTER_HORIZONTAL, 5);
     headBoxSizer->Add(staticBoxSizerStatus, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
     staticBoxSizerSettings = new wxStaticBoxSizer(wxHORIZONTAL, Panel1, _("Scan Settings"));
     FlexGridSizer1 = new wxFlexGridSizer(0, 2, 0, 0);
@@ -140,12 +140,12 @@ ActiveStereoFrame::ActiveStereoFrame(wxWindow* parent,wxWindowID id)
     StaticText2 = new wxStaticText(Panel1, ID_STATICTEXT6, _("Brightness Threshold controls how bright the laser must be in the image for it to be detected.  Low values will be more forgiving of light lasers or dark objects, but tend to produce more noise.\n\nBrightness Filter controls how bright pixels must appear relative to other laser pixels.  Low values are more forgiving but tend to produce more noise."), wxDefaultPosition, wxSize(319,170), 0, _T("ID_STATICTEXT6"));
     headBoxSizer->Add(StaticText2, 1, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
     BoxSizer2 = new wxBoxSizer(wxHORIZONTAL);
-    butCapture = new wxButton(Panel1, ID_BUTTON3, _("Start Scan"), wxDefaultPosition, wxSize(150,32), 0, wxDefaultValidator, _T("ID_BUTTON3"));
-    butCapture->Disable();
-    BoxSizer2->Add(butCapture, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-    butDoneScanning = new wxButton(Panel1, ID_BUTTON1, _("Done Scanning"), wxDefaultPosition, wxSize(150,32), 0, wxDefaultValidator, _T("ID_BUTTON1"));
-    butDoneScanning->Disable();
-    BoxSizer2->Add(butDoneScanning, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+    btnCapture = new wxButton(Panel1, ID_BUTTON3, _("Start Scan"), wxDefaultPosition, wxSize(150,32), 0, wxDefaultValidator, _T("ID_BUTTON3"));
+    btnCapture->Disable();
+    BoxSizer2->Add(btnCapture, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+    btnDoneScanning = new wxButton(Panel1, ID_BUTTON1, _("Done Scanning"), wxDefaultPosition, wxSize(150,32), 0, wxDefaultValidator, _T("ID_BUTTON1"));
+    btnDoneScanning->Disable();
+    BoxSizer2->Add(btnDoneScanning, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
     headBoxSizer->Add(BoxSizer2, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
     topBoxSizer->Add(headBoxSizer, 0, wxALL|wxALIGN_TOP|wxALIGN_CENTER_HORIZONTAL, 5);
     BoxSizer1->Add(topBoxSizer, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
@@ -178,13 +178,13 @@ ActiveStereoFrame::ActiveStereoFrame(wxWindow* parent,wxWindowID id)
     StatusBar1->SetStatusStyles(1,__wxStatusBarStyles_1);
     SetStatusBar(StatusBar1);
 
-    Connect(ID_BUTTON4,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&ActiveStereoFrame::OnButCameraConnectClick);
+    Connect(ID_BUTTON4,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&ActiveStereoFrame::OnBtnCameraConnectClick);
     Connect(ID_SLIDER3,wxEVT_SCROLL_THUMBTRACK,(wxObjectEventFunction)&ActiveStereoFrame::OnSliderImageThresholdCmdScroll);
     Connect(ID_SLIDER3,wxEVT_SCROLL_CHANGED,(wxObjectEventFunction)&ActiveStereoFrame::OnSliderImageThresholdCmdScroll);
     Connect(ID_SLIDER1,wxEVT_SCROLL_THUMBTRACK,(wxObjectEventFunction)&ActiveStereoFrame::OnSliderBrightnessFilterCmdScrollThumbTrack);
     Connect(ID_SLIDER1,wxEVT_SCROLL_CHANGED,(wxObjectEventFunction)&ActiveStereoFrame::OnSliderBrightnessFilterCmdScrollThumbTrack);
-    Connect(ID_BUTTON3,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&ActiveStereoFrame::OnButCaptureClick);
-    Connect(ID_BUTTON1,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&ActiveStereoFrame::OnButDoneScanningClick);
+    Connect(ID_BUTTON3,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&ActiveStereoFrame::OnBtnCaptureClick);
+    Connect(ID_BUTTON1,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&ActiveStereoFrame::OnBtnDoneScanningClick);
     Connect(idMenuQuit,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&ActiveStereoFrame::OnQuit);
     Connect(idMenuChangeCamera,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&ActiveStereoFrame::OnMenuChangeCameraSelected);
     Connect(idMenuAbout,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&ActiveStereoFrame::OnAbout);
@@ -287,7 +287,7 @@ void ActiveStereoFrame::OnAbout(wxCommandEvent& event)
 }
 
 // Scan button clicked -- start a new scan!
-void ActiveStereoFrame::OnButCaptureClick(wxCommandEvent& event)
+void ActiveStereoFrame::OnBtnCaptureClick(wxCommandEvent& event)
 {
     wxString directory = "";
 
@@ -347,7 +347,7 @@ void ActiveStereoFrame::OnButCaptureClick(wxCommandEvent& event)
 
     // start scanning!
     cam->StartScan();
-    butDoneScanning->SetFocus();
+    btnDoneScanning->SetFocus();
 }
 
 // Catch an update image event and display the new image
@@ -376,8 +376,8 @@ void ActiveStereoFrame::UpdateImage(wxCommandEvent &event)
         staticBoxSizerStatus->Layout();
         headBoxSizer->Layout();
 
-        butCapture->Enable(true);
-        butCapture->SetFocus();
+        btnCapture->Enable(true);
+        btnCapture->SetFocus();
     }
 
     // update image display
@@ -418,7 +418,7 @@ void ActiveStereoFrame::WriteToFile(wxCommandEvent &event)
 }
 
 // Camera connect button clicked -- attempt to connect to the camera
-void ActiveStereoFrame::OnButCameraConnectClick(wxCommandEvent& event)
+void ActiveStereoFrame::OnBtnCameraConnectClick(wxCommandEvent& event)
 {
     if (cam)
     {
@@ -434,24 +434,24 @@ void ActiveStereoFrame::SetGUIStateDuringScan(bool scanning)
     if (scanning == true)
     {
         enable = false;
-        butCapture->SetLabel("Scanning...");
+        btnCapture->SetLabel("Scanning...");
 
     } else {
         enable = true;
-        butCapture->SetLabel("Start Scan");
-        butDoneScanning->SetLabel("Done Scanning");
+        btnCapture->SetLabel("Start Scan");
+        btnDoneScanning->SetLabel("Done Scanning");
     }
 
-    butCapture->Enable(enable);
-    butDoneScanning->Enable(!enable);
+    btnCapture->Enable(enable);
+    btnDoneScanning->Enable(!enable);
     sliderImageThreshold->Enable(enable);
     sliderBrightnessFilter->Enable(enable);
 
-    butCameraConnect->Enable(enable);
+    btnCameraConnect->Enable(enable);
 
     if (scanning == false)
     {
-        butCapture->SetFocus();
+        btnCapture->SetFocus();
     }
 
 }
@@ -469,14 +469,14 @@ void ActiveStereoFrame::ScanFinished(wxCommandEvent &event)
 }
 
 // Done Scanning button event handler
-void ActiveStereoFrame::OnButDoneScanningClick(wxCommandEvent& event)
+void ActiveStereoFrame::OnBtnDoneScanningClick(wxCommandEvent& event)
 {
     // stop the scan by telling scanStatus to stop scanning.
     // this will let the scanning thread finish it's current tasks
     // once done, the thread will send a scan finished event.
     scanStatus->SetScanning(false);
-    butDoneScanning->SetLabel("Finishing Scan...");
-    butDoneScanning->Enable(false);
+    btnDoneScanning->SetLabel("Finishing Scan...");
+    btnDoneScanning->Enable(false);
 }
 
 // Update the image threshold slider label on slider move
@@ -549,7 +549,7 @@ void ActiveStereoFrame::UpdateFps(wxUpdateUIEvent &event)
             staticBoxSizerStatus->Layout();
             headBoxSizer->Layout();
 
-            butCapture->Enable(false);
+            btnCapture->Enable(false);
         }
     }
 

@@ -62,18 +62,18 @@ class ActiveStereoFrame: public wxFrame
         //(*Handlers(ActiveStereoFrame)
         void OnQuit(wxCommandEvent& event);
         void OnAbout(wxCommandEvent& event);
-        void OnButSetConfigClick(wxCommandEvent& event);
-        void OnButCaptureClick(wxCommandEvent& event);
+        void OnBtnSetConfigClick(wxCommandEvent& event);
+        void OnBtnCaptureClick(wxCommandEvent& event);
         void OnSliderImageThresholdCmdScroll(wxScrollEvent& event);
         void OnSliderLaserMaxCmdScrollChanged(wxScrollEvent& event);
         void OnSliderLaserMinCmdScrollChanged(wxScrollEvent& event);
-        void OnButCameraConnectClick(wxCommandEvent& event);
+        void OnBtnCameraConnectClick(wxCommandEvent& event);
         void OnSliderMirrorResolutionCmdScrollChanged(wxScrollEvent& event);
         void OnSliderMirrorPositionCmdScrollChanged(wxScrollEvent& event);
         void OnSliderLaserIntensityCmdScrollChanged(wxScrollEvent& event);
         void OnSliderServoPositionCmdScrollChanged(wxScrollEvent& event);
         void OnSliderMirrorPositionCmdScrollChangedWithMove(wxScrollEvent& event);
-        void OnButDoneScanningClick(wxCommandEvent& event);
+        void OnBtnDoneScanningClick(wxCommandEvent& event);
         void OnSliderBrightnessFilterCmdScrollThumbTrack(wxScrollEvent& event);
         void OnMenuChangeCameraSelected(wxCommandEvent& event);
         //*)
@@ -117,10 +117,10 @@ class ActiveStereoFrame: public wxFrame
         wxStaticText* lblCameraConnected;
         wxStaticText* StaticText2;
         wxFlexGridSizer* flexGridStatus;
-        wxButton* butCameraConnect;
-        wxButton* butCapture;
+        wxButton* btnCameraConnect;
+        wxButton* btnCapture;
         wxStaticBoxSizer* staticBoxSizerStatus;
-        wxButton* butDoneScanning;
+        wxButton* btnDoneScanning;
         wxStaticText* lblStaticCameraConnected;
         //*)
 

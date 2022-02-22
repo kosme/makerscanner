@@ -45,14 +45,14 @@ DistanceToReferenceDialog::DistanceToReferenceDialog(CaptureThread *captureThrea
 	FlexGridSizer1 = new wxFlexGridSizer(0, 2, 0, 0);
 	lblCoverLaser = new wxStaticText(Panel1, ID_STATICTEXT4, _("1) Cover the laser"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT4"));
 	FlexGridSizer1->Add(lblCoverLaser, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-	butLaserCovered = new wxButton(Panel1, ID_BUTTON1, _("Done"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON1"));
-	FlexGridSizer1->Add(butLaserCovered, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	btnLaserCovered = new wxButton(Panel1, ID_BUTTON1, _("Done"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON1"));
+	FlexGridSizer1->Add(btnLaserCovered, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	lblCenterLaser = new wxStaticText(Panel1, ID_STATICTEXT5, _("2) Center the laser"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT5"));
 	lblCenterLaser->Disable();
 	FlexGridSizer1->Add(lblCenterLaser, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-	butLaserCentered = new wxButton(Panel1, ID_BUTTON2, _("Done"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON2"));
-	butLaserCentered->Disable();
-	FlexGridSizer1->Add(butLaserCentered, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	btnLaserCentered = new wxButton(Panel1, ID_BUTTON2, _("Done"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON2"));
+	btnLaserCentered->Disable();
+	FlexGridSizer1->Add(btnLaserCentered, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	lblOr = new wxStaticText(Panel1, ID_STATICTEXT6, _("or"), wxDefaultPosition, wxSize(45,17), 0, _T("ID_STATICTEXT6"));
 	lblOr->Disable();
 	FlexGridSizer1->Add(lblOr, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
@@ -65,9 +65,9 @@ DistanceToReferenceDialog::DistanceToReferenceDialog(CaptureThread *captureThrea
 	spinDistance->Disable();
 	FlexGridSizer1->Add(spinDistance, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	FlexGridSizer1->Add(-1,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	butDistanceEntered = new wxButton(Panel1, wxID_OK, _("Done"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("wxID_OK"));
-	butDistanceEntered->Disable();
-	FlexGridSizer1->Add(butDistanceEntered, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	btnDistanceEntered = new wxButton(Panel1, wxID_OK, _("Done"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("wxID_OK"));
+	btnDistanceEntered->Disable();
+	FlexGridSizer1->Add(btnDistanceEntered, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	BoxSizer2->Add(FlexGridSizer1, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	Panel1->SetSizer(BoxSizer2);
 	BoxSizer2->Fit(Panel1);
@@ -76,11 +76,11 @@ DistanceToReferenceDialog::DistanceToReferenceDialog(CaptureThread *captureThrea
 	SetSizer(BoxSizer1);
 	BoxSizer1->SetSizeHints(this);
 	
-	Connect(ID_BUTTON1,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&DistanceToReferenceDialog::OnButLaserCoveredClick);
-	Connect(ID_BUTTON2,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&DistanceToReferenceDialog::OnButLaserCenteredClick);
+	Connect(ID_BUTTON1,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&DistanceToReferenceDialog::OnBtnLaserCoveredClick);
+	Connect(ID_BUTTON2,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&DistanceToReferenceDialog::OnBtnLaserCenteredClick);
 	//*)
 
-	butLaserCovered->SetFocus();
+	btnLaserCovered->SetFocus();
 	captureThread = captureThreadIn;
 }
 
@@ -91,7 +91,7 @@ DistanceToReferenceDialog::~DistanceToReferenceDialog()
 }
 
 
-void DistanceToReferenceDialog::OnButLaserCenteredClick(wxCommandEvent& event)
+void DistanceToReferenceDialog::OnBtnLaserCenteredClick(wxCommandEvent& event)
 {
 	captureThread->Flush();
 	cv::Mat *laserCenteredTemp = captureThread->Pop();
@@ -109,25 +109,24 @@ bool DistanceToReferenceDialog::TransferDataFromWindow()
 	return true;
 }
 
-void DistanceToReferenceDialog::OnButLaserCoveredClick(wxCommandEvent& event)
+void DistanceToReferenceDialog::OnBtnLaserCoveredClick(wxCommandEvent& event)
 {
 	captureThread->Flush();
 	cv::Mat *tempNoLaserImage = captureThread->Pop();
 
 	noLaserImage = new cv::Mat(tempNoLaserImage->clone());
 
-
-	butLaserCovered->Enable(false);
+	btnLaserCovered->Enable(false);
 	lblCoverLaser->Enable(false);
 
 	lblCenterLaser->Enable(true);
-	butLaserCentered->Enable(true);
+	btnLaserCentered->Enable(true);
 	lblOr->Enable(true);
 	lblEnterDistance->Enable(true);
 	spinDistance->Enable(true);
-	butDistanceEntered->Enable(true);
+	btnDistanceEntered->Enable(true);
 
-	butLaserCentered->SetFocus();
+	btnLaserCentered->SetFocus();
 
 }
 

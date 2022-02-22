@@ -24,16 +24,16 @@ class DistanceToReferenceDialog: public wxDialog
 
 		//(*Declarations(DistanceToReferenceDialog)
 		wxPanel* Panel1;
-		wxButton* butLaserCentered;
+		wxButton* btnLaserCentered;
 		wxStaticText* lblOr;
 		wxStaticText* lblCoverLaser;
 		wxStaticText* StaticText1;
 		wxStaticLine* StaticLine1;
-		wxButton* butLaserCovered;
+		wxButton* btnLaserCovered;
 		wxStaticText* lblCenterLaser;
 		wxStaticText* lblEnterDistance;
 		wxSpinCtrl* spinDistance;
-		wxButton* butDistanceEntered;
+		wxButton* btnDistanceEntered;
 		//*)
 
 		float GetWallDistance() { return distance; }
@@ -60,8 +60,8 @@ class DistanceToReferenceDialog: public wxDialog
 	private:
 
 		//(*Handlers(DistanceToReferenceDialog)
-		void OnButLaserCenteredClick(wxCommandEvent& event);
-		void OnButLaserCoveredClick(wxCommandEvent& event);
+		void OnBtnLaserCenteredClick(wxCommandEvent& event);
+		void OnBtnLaserCoveredClick(wxCommandEvent& event);
 		//*)
 
 		float distance;
