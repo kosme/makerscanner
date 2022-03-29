@@ -25,7 +25,6 @@
 #include <wx/intl.h>
 //*)
 
-
 //helper functions
 enum wxbuildinfoformat {
     short_f, long_f };
@@ -193,7 +192,7 @@ ActiveStereoFrame::ActiveStereoFrame(wxWindow* parent,wxWindowID id)
     // frame icon
     #if defined(__WXMSW__)
         {
-            wxIcon FrameIcon("laserIcon.ico", wxBITMAP_TYPE_ICO);
+            wxIcon FrameIcon("..\\laserIcon.ico", wxBITMAP_TYPE_ICO);
             SetIcon(FrameIcon);
         }
     #elif defined(__UNIX__)
@@ -255,22 +254,25 @@ ActiveStereoFrame::~ActiveStereoFrame()
     // make sure to delete cam before m_pCamView otherwise
     // you might get a crash on exit in Windows OS (most likley
     // when you have a UpdateImage event after the viewer is gone)
-    if (cam)
+    if (cam != nullptr)
     {
         delete cam;
     }
-    if (m_pCamView)
+    if (m_pCamView!=nullptr)
     {
         delete m_pCamView;
     }
-    if (scanStatus)
+    if (scanStatus!=nullptr)
     {
         delete scanStatus;
     }
-    if (config)
-    {
-        delete config;
-    }
+    // if (config != nullptr)
+    // {
+    //     delete config;
+    //     //config->~wxConfigBase();
+    // }
+
+    Destroy();
 }
 
 // On thread destruction
@@ -292,6 +294,7 @@ void ActiveStereoFrame::OnBtnCaptureClick(wxCommandEvent& event)
     wxString directory = "";
 
     // read the last directory used
+    wxConfig *config = (wxConfig*)wxConfigBase::Get();
     if (config->Read("ScanDir", &directory))
     {
         // check for a not valid directory
@@ -337,7 +340,7 @@ void ActiveStereoFrame::OnBtnCaptureClick(wxCommandEvent& event)
     // Disable buttons/sliders during scanning
     SetGUIStateDuringScan(true);
 
-    if (!cam)
+    if (cam == nullptr)
     {
         cam = new Cameras(txtLog, this, scanStatus, cameraNum);  // create the camera object if it doesn't already exist
     }
@@ -355,7 +358,7 @@ void ActiveStereoFrame::UpdateImage(wxCommandEvent &event)
 {
 
     // image is shipped as a pointer in the event
-    // cast to IplImage (must release once finished)
+    // cast to cv::Mat
     cv::Mat *img = (cv::Mat*)event.GetClientData();
 
     if (updateImageRunning == true)
@@ -384,7 +387,7 @@ void ActiveStereoFrame::UpdateImage(wxCommandEvent &event)
     m_pCamView->DrawCam(img);
 
     // delete the image that was copied for us to display
-    img->~Mat();
+    delete img;
 
     updateImageRunning = false;
 
@@ -420,9 +423,8 @@ void ActiveStereoFrame::WriteToFile(wxCommandEvent &event)
 // Camera connect button clicked -- attempt to connect to the camera
 void ActiveStereoFrame::OnBtnCameraConnectClick(wxCommandEvent& event)
 {
-    if (cam)
-    {
-        delete cam;
+    if (cam != nullptr) {
+        cam->~Cameras();
     }
     cam = new Cameras(txtLog, this, scanStatus, cameraNum);  // create the camera object
 }
@@ -431,7 +433,7 @@ void ActiveStereoFrame::OnBtnCameraConnectClick(wxCommandEvent& event)
 void ActiveStereoFrame::SetGUIStateDuringScan(bool scanning)
 {
     bool enable;
-    if (scanning == true)
+    if (scanning)
     {
         enable = false;
         btnCapture->SetLabel("Scanning...");

@@ -45,11 +45,10 @@ using namespace std;
 #define DEBUG_ON 0 // set to 1 to print warning messages
 
 // define events in the implementation
-//DEFINE_EVENT_TYPE(IMAGE_UPDATE_EVENT)
-DEFINE_EVENT_TYPE(DISPLAY_TEXT_EVENT)
-DEFINE_EVENT_TYPE(WRITE_TO_FILE_EVENT)
-DEFINE_EVENT_TYPE(SCAN_PROGRESS_EVENT)
-DEFINE_EVENT_TYPE(SCAN_FINISHED_EVENT)
+wxDEFINE_EVENT(DISPLAY_TEXT_EVENT, wxCommandEvent);
+wxDEFINE_EVENT(WRITE_TO_FILE_EVENT, wxCommandEvent);
+wxDEFINE_EVENT(SCAN_PROGRESS_EVENT, wxCommandEvent);
+wxDEFINE_EVENT(SCAN_FINISHED_EVENT, wxCommandEvent);
 
 // Init values
 ScanThread::ScanThread(wxFrame *windowIn, CaptureThread *captureIn, ScanStatus *scanStatusIn, cv::Mat *noLaserIn,
@@ -60,11 +59,12 @@ ScanThread::ScanThread(wxFrame *windowIn, CaptureThread *captureIn, ScanStatus *
     laserCentered = laserCenteredIn;
     noLaser = noLaserIn;
 
-    noLaserBlur = new cv::Mat(noLaser->clone());
-
+    noLaserBlur = new cv::Mat();
+    noLaser->copyTo(*noLaserBlur);
     cv::GaussianBlur(*noLaser, *noLaserBlur, cv::Size(BLUR_AMOUNT, BLUR_AMOUNT),0,0);
 
-    coveredImage = new cv::Mat(noLaser->clone());
+    coveredImage = new cv::Mat();
+    noLaser->copyTo(*coveredImage);
     
     scanStatus = scanStatusIn;
     captureThread = captureIn;
@@ -104,6 +104,10 @@ void ScanThread::OnExit()
         coveredImage->~Mat();
     }
 
+    if (noLaserBlur) {
+      noLaserBlur->~Mat();
+    }
+
     // noLaser image is released by Cameras.cpp
 
     // laserCentered image is released by Cameras.cpp
@@ -123,7 +127,7 @@ void ScanThread::SetPixelRange(int Xmin, int Ymin, int Xmax, int Ymax)
 // Called when thread is started
 void* ScanThread::Entry()
 {
-    captureThread->SetCapture(CAPTURE);
+    captureThread->SetCapture(ACTIVE);
 
     // set up a pointcloud object
     pointCloud = new PointCloud();

@@ -13,8 +13,6 @@
 
 #include <wx/wx.h>
 
-//#include "cv.h"
-//#include "highgui.h"
 #include "opencv2/core.hpp"
 #include "opencv2/imgproc.hpp"
 
@@ -46,7 +44,7 @@ protected:
     //CImage	m_Canvas;
 	wxBitmap *m_pBitmap;
 
-  	bool	m_bDrawing;
+  bool	m_bDrawing;
 	bool	m_bNewImage;
 
 	int m_nWidth;

@@ -39,13 +39,13 @@ using namespace std;
 enum CaptureStatus
 {
 	IDLE,
-	CAPTURE,
+	ACTIVE,
 	PREVIEW,
 	STOP
 };
 
 BEGIN_DECLARE_EVENT_TYPES()
-	DECLARE_EVENT_TYPE(IMAGE_UPDATE_EVENT, -1)
+  wxDECLARE_EVENT(IMAGE_UPDATE_EVENT, wxCommandEvent);
 END_DECLARE_EVENT_TYPES()
 
 
@@ -63,7 +63,7 @@ class CaptureThread : public wxThread
 
 		cv::Mat* Pop();
 
-		void SetCapture(CaptureStatus newStatus) { capturing = newStatus; }
+		void SetCapture(CaptureStatus newStatus) { currentCaptureStatus = newStatus; }
 
 		int GetQueueSize() { return imageQueue.size(); }
 		void SendFrame(cv::Mat *frame);
@@ -72,7 +72,7 @@ class CaptureThread : public wxThread
 
 	private:
 
-		CaptureStatus capturing;
+		CaptureStatus currentCaptureStatus;
 
 		wxFrame *window;
 		cv::VideoCapture *cvCapture;
@@ -81,10 +81,9 @@ class CaptureThread : public wxThread
 
 		queue<cv::Mat*> imageQueue;
 
-		cv::Mat src;
+    cv::Mat *src;
 
-
-
+    cv::Mat *pDstImg;
 };
 
 

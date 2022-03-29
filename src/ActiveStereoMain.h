@@ -19,6 +19,8 @@
 #ifndef ACTIVESTEREOMAIN_H
 #define ACTIVESTEREOMAIN_H
 
+#include "Debugger.h"
+
 //(*Headers(ActiveStereoFrame)
 #include <wx/sizer.h>
 #include <wx/button.h>
@@ -152,7 +154,7 @@ class ActiveStereoFrame: public wxFrame
 		wxDateTime lastUsbTime;
 
 		// camera object, allows access to scanning thread
-		Cameras *cam;
+		Cameras *cam = nullptr;
 
 		// object that holds the current scan's status for communitcating between
 		// the GUI and scanning/capturing threads.
@@ -164,7 +166,7 @@ class ActiveStereoFrame: public wxFrame
 		CCamView* m_pCamView;
 
 		// configuration storage object
-		wxConfig *config;
+		wxConfig *config = nullptr;
 
 		// data for the FPS display
 		wxDateTime timeOfLastFpsUpdate;

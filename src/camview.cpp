@@ -24,7 +24,6 @@
 #include <math.h>
 #include <stdio.h>
 
-
 #ifdef __GNUG__
 #pragma implementation
 #pragma interface
@@ -70,6 +69,10 @@ CCamView::CCamView( wxWindow *frame, const wxPoint& pos, const wxSize& size ):
 CCamView::~CCamView( )
 {
     //m_pCamera = NULL;
+  if (m_pBitmap)
+  {
+    delete m_pBitmap;
+  }
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -145,23 +148,22 @@ void CCamView::DrawCam( cv::Mat* pImg )
     if( pImg )
     {
         // copy the image (will be deleted after display)
-        cv::Mat *pDstImg = new cv::Mat(pImg->clone());
+        cv::Mat pDstImg;
+        pImg->copyTo(pDstImg);
 
         int nCamWidth = pImg->cols;
         int nCamHeight = pImg->rows;
 
         // draw a vertical line through the center of the image
-        cv::line(*pDstImg, cv::Point(nCamWidth/2, 0), cv::Point(nCamWidth/2, nCamHeight), CV_RGB( 0,255,0 ));
+        cv::line(pDstImg, cv::Point(nCamWidth/2, 0), cv::Point(nCamWidth/2, nCamHeight), CV_RGB( 0,255,0 ));
 
         // draw a horizontal line at pixel 25
-        cv::line(*pDstImg, cv::Point(0, 25), cv::Point(nCamWidth, 25), CV_RGB( 0,255,0 ));
+        cv::line(pDstImg, cv::Point(0, 25), cv::Point(nCamWidth, 25), CV_RGB( 0,255,0 ));
 
         // draw a horizontal line through the center of the image
         //cv::line(*pDstImg, cv::Point(0, nCamHeight/2), cv::Point(nCamWidth, nCamHeight/2), CV_RGB( 0,255,0 ));
 
         // process image from opencv to wxwidgets
-        
-        wxImage *pWxImg = new wxImage(nCamWidth, nCamHeight, pDstImg->data, TRUE);
 
         // convert to bitmap to be used by the window to draw
 
@@ -170,15 +172,12 @@ void CCamView::DrawCam( cv::Mat* pImg )
             delete m_pBitmap;
         }
 
-        m_pBitmap = new wxBitmap( pWxImg->Scale(m_nWidth, m_nHeight) );
+        m_pBitmap = new wxBitmap(wxImage(nCamWidth, nCamHeight, pDstImg.data, TRUE).Scale(m_nWidth, m_nHeight));
 
         m_bNewImage = true;
         m_bDrawing = false;
 
         Refresh( FALSE );
-
-        //Update( );
-        delete pWxImg;
 
         //cvReleaseImage( &pDstImg );
 

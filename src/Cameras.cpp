@@ -56,7 +56,6 @@ Cameras::Cameras(wxTextCtrl *pMemo, wxFrame *windowIn, ScanStatus *scanStatusIn,
 
 	if (InitializeCamera() == true)
 	{
-
 		captureThread = new CaptureThread(window, m_MyCapture);
 		if ( captureThread->Create() != wxTHREAD_NO_ERROR )
 		{
@@ -83,10 +82,29 @@ Cameras::~Cameras()
 		laserCenteredImage->~Mat();
 	}
 
+  if (m_LastFrame) {
+    m_LastFrame->~Mat();
+  }
+
 	// Automatic release on destruction
 	if (m_MyCapture->isOpened()) 
 		m_MyCapture->release();
 
+  //m_MyCapture->~VideoCapture();
+  delete m_MyCapture;
+
+  if (captureThread) {
+    captureThread->Delete();
+  }
+
+  /*if (myScanThread) {
+    myScanThread->Delete();
+  }*/
+
+  if (scanStatus) {
+    scanStatus->~ScanStatus();
+  }
+  //delete captureThread;
 }
 
 // Attempt to connect to the camera and grab a frame

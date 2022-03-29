@@ -53,10 +53,10 @@ using namespace std;
 
 // clear event types in the header of the source file
 BEGIN_DECLARE_EVENT_TYPES()
-	DECLARE_EVENT_TYPE(DISPLAY_TEXT_EVENT, -2)
-	DECLARE_EVENT_TYPE(WRITE_TO_FILE_EVENT, -6)
-	DECLARE_EVENT_TYPE(SCAN_PROGRESS_EVENT, -7)
-	DECLARE_EVENT_TYPE(SCAN_FINISHED_EVENT, -8)
+  wxDECLARE_EVENT(DISPLAY_TEXT_EVENT, wxCommandEvent);
+  wxDECLARE_EVENT(WRITE_TO_FILE_EVENT, wxCommandEvent);
+  wxDECLARE_EVENT(SCAN_PROGRESS_EVENT, wxCommandEvent);
+  wxDECLARE_EVENT(SCAN_FINISHED_EVENT, wxCommandEvent);
 END_DECLARE_EVENT_TYPES()
 
 // Thread that performs image capture and point cloud creation

@@ -19,19 +19,31 @@
 
 #include "CaptureThread.h"
 
-DEFINE_EVENT_TYPE(IMAGE_UPDATE_EVENT)
+wxDEFINE_EVENT(IMAGE_UPDATE_EVENT, wxCommandEvent);
 
 CaptureThread::CaptureThread(wxFrame *windowIn, cv::VideoCapture *captureIn) : wxThread(wxTHREAD_JOINABLE)
 {
-    capturing = IDLE;
+    currentCaptureStatus = IDLE;
     window = windowIn;
     cvCapture = captureIn;
+    src = new cv::Mat();
+    //pDstImg = new cv::Mat();
 }
 
 // called on thread quit -- free all memory
 void CaptureThread::OnExit()
 {
 
+  while (!imageQueue.empty()) {
+    cv::Mat *image = imageQueue.front();
+    imageQueue.pop();
+    image->~Mat();
+    //wxDELETE(image);
+  }
+  src->~Mat();
+  delete src;
+  cvCapture->~VideoCapture();
+  window = nullptr;
 }
 
 // Called when thread is started
@@ -45,20 +57,20 @@ void* CaptureThread::Entry()
             break;
         }
 
-        if (capturing == CAPTURE)
+        if (currentCaptureStatus == ACTIVE)
         {
             // get a new image
             CaptureFrame();
-        } else if (capturing == PREVIEW)
+        } else if (currentCaptureStatus == PREVIEW)
         {
 
             // get a new image and show it on screen
             CaptureFrame();
             SendFrame(imageQueue.back());
-        } else if (capturing == IDLE)
+        } else if (currentCaptureStatus == IDLE)
         {
             Sleep(10);
-        } else if (capturing == STOP)
+        } else if (currentCaptureStatus == STOP)
         {
             break;
         }
@@ -70,7 +82,7 @@ void* CaptureThread::Entry()
 }
 
 void CaptureThread::CaptureFrame()
-{
+{   
     if (!cvCapture){
         //fail
         return;
@@ -83,11 +95,10 @@ void CaptureThread::CaptureFrame()
     }
 
     for (int i=0; i < 1; i++) {
-        cvCapture->read(src); // it takes a few images to get to the newest one???
+        cvCapture->read(*src); // it takes a few images to get to the newest one???
     }
     //cv::imshow("My Camera", src); cv::waitKey(25);
-    imageQueue.push(&src);
-
+    imageQueue.push(src);
 }
 
 cv::Mat* CaptureThread::Pop()
@@ -113,9 +124,9 @@ cv::Mat* CaptureThread::Pop()
 */
 void CaptureThread::Flush()
 {
-    CaptureStatus oldCap = capturing;
+    CaptureStatus oldStatus = currentCaptureStatus;
 
-    capturing = IDLE;
+    currentCaptureStatus = IDLE;
 
     while (imageQueue.size() > 0)
     {
@@ -125,7 +136,7 @@ void CaptureThread::Flush()
         // we don't need to release images here.
     }
 
-    capturing = oldCap;
+    currentCaptureStatus = oldStatus;
 }
 
 // Display the given image on the frame
@@ -137,7 +148,6 @@ void CaptureThread::SendFrame(cv::Mat *frame)
         return;
     }
 
-    cv::Mat* pDstImg;
     cv::Size sz = cv::Size(frame->cols, frame->rows);
     pDstImg = new cv::Mat(sz, CV_8UC3, cv::Scalar::all(0));
 
@@ -157,7 +167,7 @@ void CaptureThread::SendFrame(cv::Mat *frame)
         // we don't know how to display this image based on its number of channels
 
         // give up
-        pDstImg->~Mat();
+        delete pDstImg;
         return;
     }
 
